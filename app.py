@@ -16,4 +16,9 @@ def add_music():
     return 'Hello, world!'
 
 
-app.run(port=4545, debug=True)
+@app.route('/stop')
+def stop_music():
+    music.stop()
+
+
+app.run(host='0.0.0.0', port=4545, debug=True)

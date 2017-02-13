@@ -37,3 +37,6 @@ class WyMusic(BaseMusic):
 
     def remove(self):
         self.player.remove_music()
+
+    def stop(self):
+        self.player.stop_song()
