@@ -6,14 +6,14 @@ app = Flask(__name__)
 music = WyMusic()
 
 
-@app.route('/songs')
+@app.route('/songs', methods=['GET', 'POST', 'DELETE'])
 def add_music():
     {
-        'GET': lambda url: music.list(),
-        'POST': lambda url: music.add(url),
-        'DELETE': lambda url: music.remove(),
-    }[request.method](request.args.get('origin_url'))
+        'GET': lambda request_obj: music.list(),
+        'POST': lambda request_obj: music.add(request_obj.form.get('origin_url')),
+        'DELETE': lambda request_obj: music.remove(),
+    }[request.method](request)
     return 'Hello, world!'
 
 
-app.run(host='192.168.2.9', port=4545, debug=True)
+app.run(port=4545, debug=True)
