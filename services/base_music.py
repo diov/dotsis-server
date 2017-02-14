@@ -16,15 +16,19 @@ class BaseMusic:
         raise Exception('Don\'t call this function not Implementation')
 
     def add(self, url):
-        mp3_url = self.match(url)
-        if mp3_url:
-            self.player.add_music(mp3_url)
+        song = self.match(url)
+        if song.res_url:
+            self.player.add_music(song)
+            return song
+        else:
+            return 'Unsupported Music'
 
     def list(self):
         return self.player.get_list()
 
     def remove(self):
         self.player.remove_music()
+        return self.list()
 
     def stop(self):
         self.player.stop_song()

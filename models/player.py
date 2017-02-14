@@ -11,23 +11,23 @@ class Player:
     def __init__(self):
         self.play_list = []
 
-    def popen_call(self, onExit, popenArgs):
+    def popen_call(self, on_exit, popen_args):
         """
         Runs the given args in a subprocess.Popen, and then calls the function
-        onExit when the subprocess completes.
-        onExit is a callable object, and popenArgs is a lists/tuple of args that
+        on_exit when the subprocess completes.
+        on_exit is a callable object, and popen_args is a lists/tuple of args that
         would give to subprocess.Popen.
         """
 
-        def runInThread(onExit, popenArgs):
-            self.p = subprocess.Popen(['mpg123', popenArgs], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+        def run_in_thread(callback, args):
+            self.p = subprocess.Popen(['mpg123', args], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                       stderr=subprocess.PIPE)
             self.p.wait()
             if self.play_flag:
-                onExit()
+                callback()
             return
 
-        thread = threading.Thread(target=runInThread, args=(onExit, popenArgs))
+        thread = threading.Thread(target=run_in_thread, args=(on_exit, popen_args))
         thread.start()
         return thread
 
@@ -38,10 +38,10 @@ class Player:
             self.play_list.clear()
 
     def get_list(self):
-        pass
+        return self.play_list
 
-    def add_music(self, url):
-        self.play_list.append(url)
+    def add_music(self, song):
+        self.play_list.append(song)
         if not self.play_flag:
             self.next_song()
 
@@ -49,7 +49,7 @@ class Player:
         if len(self.play_list) > 0:
             song = self.play_list.pop(0)
             self.play_flag = True
-            self.popen_call(self.next_song(), song)
+            self.popen_call(self.next_song, song.res_url)
         else:
             self.play_flag = False
 

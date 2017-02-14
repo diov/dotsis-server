@@ -3,4 +3,10 @@ class Song:
     singer = None
     album = None
     res_url = None
-    playing = False
+
+    def __init__(self, name, singer, album, res_url):
+        super().__init__()
+        self.name = name
+        self.singer = singer
+        self.album = album
+        self.res_url = res_url

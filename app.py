@@ -8,12 +8,11 @@ music = WyMusic()
 
 @app.route('/songs', methods=['GET', 'POST', 'DELETE'])
 def add_music():
-    {
+    return {
         'GET': lambda request_obj: music.list(),
         'POST': lambda request_obj: music.add(request_obj.form.get('origin_url')),
         'DELETE': lambda request_obj: music.remove(),
     }[request.method](request)
-    return 'Hello, world!'
 
 
 @app.route('/stop', methods=['GET'])

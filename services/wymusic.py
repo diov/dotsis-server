@@ -2,9 +2,10 @@ import re
 
 import requests
 
+from models.song import Song
 from services.base_music import BaseMusic
 
-regex = r"id="
+regex = r"?id="
 domain_regex = r"music.163.com"
 
 
@@ -17,9 +18,9 @@ class WyMusic(BaseMusic):
             headers = {'Cookie': 'appver=1.5.0.75771', 'Referer': 'http://music.163.com/'}
             request = requests.get(domain, params=params, headers=headers)
             if request.status_code == 200:
-                mp3_url = request.json()['songs'][0]['mp3Url']
-                if mp3_url:
-                    return mp3_url
+                song_data = request.json()['songs'][0]['mp3Url']
+                if song_data:
+                    return Song(song_data['name'], song_data['singer'], song_data['album'], song_data['mp3Url'])
         else:
             BaseMusic.support_error()
 
