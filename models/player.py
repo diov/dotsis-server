@@ -1,4 +1,5 @@
 import subprocess
+import threading
 
 
 class Player:
@@ -9,6 +10,26 @@ class Player:
 
     def __init__(self):
         self.play_list = []
+
+    def popen_call(self, onExit, popenArgs):
+        """
+        Runs the given args in a subprocess.Popen, and then calls the function
+        onExit when the subprocess completes.
+        onExit is a callable object, and popenArgs is a lists/tuple of args that
+        would give to subprocess.Popen.
+        """
+
+        def runInThread(onExit, popenArgs):
+            self.p = subprocess.Popen(['mpg123', popenArgs], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                      stderr=subprocess.PIPE)
+            self.p.wait()
+            if self.play_flag:
+                onExit()
+            return
+
+        thread = threading.Thread(target=runInThread, args=(onExit, popenArgs))
+        thread.start()
+        return thread
 
     def stop_song(self):
         if self.p:
@@ -25,15 +46,12 @@ class Player:
             self.next_song()
 
     def next_song(self):
-        while len(self.play_list) > 0:
+        if len(self.play_list) > 0:
             song = self.play_list.pop(0)
             self.play_flag = True
-            self.p = subprocess.Popen(['mpg123', song], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                      stderr=subprocess.PIPE)
-            self.p.wait()
-            self.play_flag = True
+            self.popen_call(self.next_song(), song)
         else:
-            print('the playlist is empty')
+            self.play_flag = False
 
     def remove_music(self):
         if len(self.play_list) > 0:
