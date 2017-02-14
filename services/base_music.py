@@ -17,7 +17,7 @@ class BaseMusic:
 
     def add(self, url):
         song = self.match(url)
-        if song.res_url:
+        if song.get('res_url'):
             self.player.add_music(song)
             return song
         else:

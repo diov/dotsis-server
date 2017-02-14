@@ -2,7 +2,6 @@ import re
 
 import requests
 
-from models.song import Song
 from services.base_music import BaseMusic
 
 regex = r"\?id="

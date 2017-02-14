@@ -49,7 +49,7 @@ class Player:
         if len(self.play_list) > 0:
             song = self.play_list.pop(0)
             self.play_flag = True
-            self.popen_call(self.next_song, song.res_url)
+            self.popen_call(self.next_song, song.get('res_url'))
         else:
             self.play_flag = False
 
