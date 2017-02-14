@@ -1,6 +1,8 @@
 import subprocess
 import threading
 
+import time
+
 
 class Player:
     p = None
@@ -32,10 +34,10 @@ class Player:
         return thread
 
     def stop_song(self):
-        if self.p:
+        if self.p and self.play_flag:
+            self.play_flag = False
             self.p.terminate()
             self.p = None
-            self.play_list.clear()
 
     def get_list(self):
         return self.play_list
@@ -54,6 +56,7 @@ class Player:
             self.play_flag = False
 
     def remove_music(self):
-        if len(self.play_list) > 0:
-            self.play_list.pop(0)
+        if self.play_flag:
+            self.stop_song()
+            time.sleep(0.01)
             self.next_song()
