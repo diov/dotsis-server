@@ -25,6 +25,7 @@ class Player:
             self.p = subprocess.Popen(['mpg123', args], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                       stderr=subprocess.PIPE)
             self.p.wait()
+            self.play_list.pop(0)
             if self.play_flag:
                 callback()
             return
@@ -49,7 +50,7 @@ class Player:
 
     def next_song(self):
         if len(self.play_list) > 0:
-            song = self.play_list.pop(0)
+            song = self.play_list[0]
             self.play_flag = True
             self.popen_call(self.next_song, song.get('res_url'))
         else:
