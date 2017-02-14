@@ -2,17 +2,13 @@ import re
 
 import requests
 
-from models.player import Player
 from services.base_music import BaseMusic
 
 regex = r"id="
+domain_regex = r"music.163.com"
 
 
 class WyMusic(BaseMusic):
-    def __init__(self):
-        super().__init__()
-        self.player = Player()
-
     def analysis(self, url):
         music_id = re.split(regex, url)[1]
         if music_id:
@@ -27,16 +23,7 @@ class WyMusic(BaseMusic):
         else:
             BaseMusic.support_error()
 
-    def add(self, url):
-        mp3_url = self.analysis(url)
-        if mp3_url:
-            self.player.add_music(mp3_url)
-
-    def list(self):
-        return self.player.get_list()
-
-    def remove(self):
-        self.player.remove_music()
-
-    def stop(self):
-        self.player.stop_song()
+    def match(self, url):
+        url_fix = re.search(domain_regex, url)
+        if url_fix:
+            return self.analysis(url)

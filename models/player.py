@@ -4,6 +4,8 @@ import subprocess
 class Player:
     p = None
     play_list = None
+    # is playing or not
+    play_flag = False
 
     def __init__(self):
         self.play_list = []
@@ -19,13 +21,17 @@ class Player:
 
     def add_music(self, url):
         self.play_list.append(url)
-        self.next_song()
+        if not self.play_flag:
+            self.next_song()
 
     def next_song(self):
         while len(self.play_list) > 0:
             song = self.play_list.pop(0)
+            self.play_flag = True
             self.p = subprocess.Popen(['mpg123', song], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                       stderr=subprocess.PIPE)
+            self.p.wait()
+            self.play_flag = True
         else:
             print('the playlist is empty')
 
