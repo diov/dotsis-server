@@ -5,7 +5,7 @@ import requests
 from models.song import Song
 from services.base_music import BaseMusic
 
-regex = r"?id="
+regex = r"\?id="
 domain_regex = r"music.163.com"
 
 
