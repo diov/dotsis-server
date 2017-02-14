@@ -18,10 +18,11 @@ class WyMusic(BaseMusic):
             headers = {'Cookie': 'appver=1.5.0.75771', 'Referer': 'http://music.163.com/'}
             request = requests.get(domain, params=params, headers=headers)
             if request.status_code == 200:
-                song_data = request.json()['songs'][0]
-                if song_data:
-                    return Song(song_data.get('name'), list(map(lambda x: x.get('name'), song_data.get('artists'))),
-                                song_data.get('album').get('name'), song_data.get('mp3Url'))
+                data = request.json()['songs'][0]
+                if data:
+                    return {'name': data.get('name'), 'album': data.get('album').get('name'),
+                            'singer': list(map(lambda x: x.get('name'), data.get('artists'))),
+                            'res_url': data.get('mp3Url')}
         else:
             BaseMusic.support_error()
 
